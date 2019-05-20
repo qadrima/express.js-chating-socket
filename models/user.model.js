@@ -6,7 +6,7 @@ let users = require('../storage/'+ MODEL_NAME +'.json');
 function createStorageIfNotExist()
 {
 	storage.createFileStorage(MODEL_NAME)
-		.then(result => { console.log(result) })
+		.then(result => { console.log('user model ready..') })
     	.catch(err => { console.log(err) }) 
 }
 
