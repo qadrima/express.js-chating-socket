@@ -18,7 +18,7 @@ function createFileStorage(filename)
 		  	{
 		  		// console.log('file not exists')
 		  		fs.writeFile(path, '[]', function (err) {
-			        if (err) throw err;
+			        if (err) reject(err);
 			        // console.log('Saved!');
 			        resolve(true)
 			    });

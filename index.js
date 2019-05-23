@@ -4,6 +4,7 @@ const server 	= app.listen(3001);
 const io 		= require('socket.io')(server);
 
 const userModel = require('./models/user.model')
+const chatModel = require('./models/chat.model')
 
 var onlineUsers = [];
 var testMessages = {};
@@ -51,13 +52,31 @@ io.on('connection', function(socket) {
     // --
     socket.on('chat-message', function(data) {
 
-    	if(!testMessages[data.room]) 
-    		testMessages[data.room] = [];
-
     	if(data.message)
-	    	testMessages[data.room].push(data);
+    	{
+	    	chatModel.writeChat(data)
+    			.then(chats => { 
+    				io.emit('chat-message-'+data.room, chats);
+    			})
+    			.catch(err => { 
+    				console.log(err) 
+    			})
+    	}
+    	else
+    	{
+    		io.emit(
+    			'chat-message-'+data.room, 
+    			chatModel.fetchDataChats(data.room)
+    		);
+    	}
+    });
 
-        io.emit('chat-message-'+data.room, testMessages[data.room]);
+    socket.on('chat-message-create-room', function(data, callback) {
+    	
+    	chatModel.createChatRoom(data.room)
+    		.then(result => { callback(true) })
+    		.catch(err => { console.log(err) })
+
     });
 
 });

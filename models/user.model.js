@@ -1,14 +1,13 @@
 const storage 	= require('../helpers/storage.helper');
 const MODEL_NAME = 'users';
 
-let users = require('../storage/'+ MODEL_NAME +'.json');
+let users;
 
-function createStorageIfNotExist()
-{
-	storage.createFileStorage(MODEL_NAME)
-		.then(result => { console.log('user model ready..') })
-    	.catch(err => { console.log(err) }) 
-}
+storage.createFileStorage(MODEL_NAME).then(result => { 
+	users = require('../storage/'+ MODEL_NAME +'.json') 
+}).catch(err => { 
+    console.log(err) 
+}) 
 
 function login(user)
 {
@@ -34,8 +33,6 @@ function login(user)
 		}
 	});
 }
-
-createStorageIfNotExist();
 
 module.exports = {
    login
